@@ -7,7 +7,7 @@
 <style>
   :root {
     --bg: #0b0e0b; --surface: #131711; --surface2: #1b2019;
-    --gold: #c9a35c; --green: #4e9a5f;
+    --gold: #c9a35c; --green: #4cc38a;
     --text: #eae5d3; --muted: #8f8b7e; --line: #242a20;
   }
   * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -16,7 +16,6 @@
     display: flex; justify-content: center; min-height: 100vh;
     font-family: Georgia, 'Times New Roman', serif;
   }
-  /* Phone frame on desktop, full-screen on mobile */
   #phone {
     width: 100%; max-width: 420px; height: 100vh;
     background: var(--bg); color: var(--text);
@@ -34,14 +33,14 @@
     display: flex; justify-content: space-between; padding: 10px 20px 2px;
     font: 12px/1 -apple-system, system-ui, sans-serif; color: var(--muted);
   }
-  /* Masthead */
   .masthead { padding: 14px 18px 12px; border-bottom: 1px solid var(--line); }
   .brand { font: 600 11px/1 'Courier New', monospace; letter-spacing: 2.5px; color: var(--gold); }
   .masthead h1 { font-size: 26px; font-weight: 500; margin-top: 4px; }
   .masthead .sub { font-size: 13px; color: var(--muted); margin-top: 3px; font-style: italic; }
-  /* Content */
   #content { flex: 1; overflow-y: auto; padding: 12px 14px 16px; }
   #content::-webkit-scrollbar { width: 0; }
+  .section { font: 600 10.5px/1 'Courier New', monospace; letter-spacing: 1.8px; color: var(--muted); margin: 14px 4px 8px; }
+  .section:first-child { margin-top: 2px; }
   .card {
     background: var(--surface); border-radius: 14px; padding: 14px;
     margin-bottom: 10px; cursor: pointer; transition: transform .12s;
@@ -53,33 +52,63 @@
   .time { font-size: 12px; color: var(--muted); font-style: italic; }
   .card h2 { font-size: 16.5px; font-weight: 500; margin: 8px 0 5px; }
   .card p { font-size: 14px; line-height: 1.45; color: var(--text); opacity: .92; }
-  .card .body { display: none; margin-top: 8px; font-size: 13px; color: var(--muted); }
+  .card .body { display: none; margin-top: 8px; font-size: 13px; color: var(--muted); line-height: 1.5; }
   .card.open .body { display: block; }
+  .card .body a { color: var(--gold); }
   .instr { font-size: 12px; color: var(--muted); text-align: center; padding: 2px 0 10px; font-style: italic; }
-  /* Research */
-  .cta {
-    display: block; text-align: center; text-decoration: none;
-    background: var(--gold); color: var(--bg); font-size: 15px;
-    border-radius: 12px; padding: 13px; margin: 6px 0 12px; font-weight: 600;
+  .readstat { display: inline-block; margin-top: 8px; font: 10px 'Courier New', monospace; letter-spacing: 1.2px; color: var(--green); }
+  /* Pricing */
+  .tierswitch { display: flex; justify-content: center; gap: 8px; margin: 4px 0 12px; }
+  .tierswitch button {
+    background: var(--surface2); border: 1px solid var(--line); color: var(--muted);
+    font: 12px -apple-system, system-ui, sans-serif; border-radius: 16px;
+    padding: 6px 14px; cursor: pointer;
   }
-  .instr-tags { margin-top: 8px; }
-  .instr-tags div { font-size: 13px; color: var(--green); }
+  .tierswitch button.active { color: var(--gold); border-color: var(--gold); }
+  .tier { position: relative; border: 1px solid var(--line); }
+  .tier.featured { border-color: var(--gold); }
+  .tier .badge {
+    position: absolute; top: -9px; right: 12px; background: var(--gold); color: var(--bg);
+    font: 600 10px -apple-system, system-ui, sans-serif; letter-spacing: 1px;
+    padding: 3px 8px; border-radius: 8px;
+  }
+  .tier h2 { color: var(--gold); }
+  .tier .price { font-size: 22px; margin: 6px 0 2px; }
+  .tier .price small { font-size: 12px; color: var(--muted); }
+  .tier ul { margin: 8px 0 10px 16px; }
+  .tier li { font-size: 12.5px; color: var(--muted); margin-bottom: 4px; line-height: 1.4; }
+  .tier .subbtn {
+    display: block; text-align: center; text-decoration: none; border-radius: 10px;
+    padding: 10px; font: 600 13px -apple-system, system-ui, sans-serif;
+    background: var(--gold); color: var(--bg); margin-bottom: 6px;
+  }
+  .tier .subbtn.ghost { background: none; border: 1px solid var(--line); color: var(--muted); }
+  .portal { text-align: center; font-size: 12.5px; margin: 4px 0 10px; }
+  .portal a { color: var(--gold); }
+  /* Saturday signup */
+  .signup { border: 1px dashed var(--gold); border-radius: 14px; padding: 14px; margin-bottom: 12px; }
+  .signup h2 { font-size: 15.5px; color: var(--gold); margin-bottom: 4px; }
+  .signup p { font-size: 13px; color: var(--muted); line-height: 1.45; margin-bottom: 10px; }
+  .signup form { display: flex; gap: 8px; }
+  .signup input {
+    flex: 1; background: var(--surface2); border: 1px solid var(--line);
+    border-radius: 18px; padding: 9px 14px; color: var(--text);
+    font: 14px Georgia, serif; outline: none; min-width: 0;
+  }
+  .signup button {
+    background: var(--green); color: #08130b; border: none; border-radius: 18px;
+    padding: 9px 16px; font: 600 13px -apple-system, system-ui, sans-serif; cursor: pointer;
+  }
+  .signup .ok { color: var(--green); font-size: 13px; font-style: italic; }
   /* Chat */
   #chatlog { display: flex; flex-direction: column; gap: 8px; padding-bottom: 8px; }
-  .bubble {
-    max-width: 78%; padding: 10px 13px; border-radius: 16px;
-    font-size: 14.5px; line-height: 1.4;
-  }
+  .bubble { max-width: 78%; padding: 10px 13px; border-radius: 16px; font-size: 14.5px; line-height: 1.4; }
   .bubble .t { display: block; font: 10px 'Courier New', monospace; letter-spacing: 1px; margin-top: 4px; opacity: .65; }
   .bubble.them { background: var(--surface); border-bottom-left-radius: 5px; align-self: flex-start; }
   .bubble.them .t { color: var(--gold); }
   .bubble.me { background: var(--green); color: #08130b; border-bottom-right-radius: 5px; align-self: flex-end; }
   .typing { color: var(--muted); font-size: 13px; font-style: italic; }
-  /* Input bar */
-  #inputbar {
-    display: none; gap: 8px; padding: 10px 12px 14px;
-    border-top: 1px solid var(--line); background: var(--bg);
-  }
+  #inputbar { display: none; gap: 8px; padding: 10px 12px 14px; border-top: 1px solid var(--line); background: var(--bg); }
   #inputbar.show { display: flex; }
   #msg {
     flex: 1; background: var(--surface2); border: 1px solid var(--line);
@@ -87,15 +116,9 @@
     font: 15px Georgia, serif; outline: none;
   }
   #msg:focus { border-color: var(--gold); }
-  #send {
-    width: 44px; height: 44px; border-radius: 50%; border: none;
-    background: var(--gold); color: var(--bg); font-size: 18px; cursor: pointer;
-  }
+  #send { width: 44px; height: 44px; border-radius: 50%; border: none; background: var(--gold); color: var(--bg); font-size: 18px; cursor: pointer; }
   /* Bottom nav */
-  #nav {
-    display: flex; border-top: 1px solid var(--line);
-    background: var(--bg); padding: 6px 0 14px;
-  }
+  #nav { display: flex; border-top: 1px solid var(--line); background: var(--bg); padding: 6px 0 14px; }
   .navitem {
     flex: 1; background: none; border: none; color: var(--muted);
     font: 12.5px -apple-system, system-ui, sans-serif; cursor: pointer;
@@ -136,44 +159,106 @@
 </div>
 
 <script>
-const ARTICLES = [
-  { cat:'PRE-MARKET BRIEF', time:'08:30 ET', title:'US cannabis names steady ahead of the open',
-    sum:'Futures flat, MSOS volume building. Today\u2019s brief covers rescheduling headlines, state ballot watch, and the names moving on above-average pre-market volume.' },
-  { cat:'POLICY', time:'07:45 ET', title:'Senate hearing sets next marker for banking reform',
-    sum:'Committee schedules markup session. We outline which operators have the most to gain from SAFE-style access, and what the timeline realistically looks like.' },
-  { cat:'EARNINGS', time:'Yesterday', title:'Multi-state operator guidance roundup: who raised, who held',
-    sum:'Three reported this week. Two raised full-year revenue guidance; one held margins flat. Our scorecard separates guidance quality from headline beats.' },
-  { cat:'FRIDAY CLOSE', time:'Friday \u00b7 17:30 ET', title:'The Friday Close: week 42 wrap',
-    sum:'Weekly performance across our coverage, positioning shifts, and the three charts that mattered \u2014 plus what we\u2019re watching before Monday\u2019s open.' },
-  { cat:'DEEP DIVE', time:'Oct 14', title:'New monthly deep dive: wholesale pricing in mature state markets',
-    sum:'Colorado and Oregon wholesale data shows stabilization after three years of compression. We model what that means for cultivator margins in 2027.' },
+/* ===== Content mirrored from green-terminal.com ===== */
+
+const FEED = [
+  { cat:'PRE-MARKET BRIEF', time:'Every trading day · 08:30 ET', read:'READ < 4 MIN',
+    title:'Overnight moves, the day\u2019s calendar, the options pulse',
+    sum:'Overnight moves and what drove them, the day\u2019s earnings and event calendar, the options pulse, and the single observation that matters \u2014 in your inbox before the open. 36 names, breadth, catalysts.',
+    body:'The daily Pre-Market Brief lands every trading day at 08:30 ET: overnight price action across the 36-name coverage universe, MSOS breadth and volume, the day\u2019s catalysts, and one observation that matters. Read time under four minutes.' },
+  { cat:'FLASH NOTE \u2116 001', time:'6 Oct 2026', read:'PUBLIC EXTRACT',
+    title:'Curaleaf\u2019s revised bid for Aurora',
+    sum:'When a qualifying event hits \u2014 M&A or financing by a covered operator, a federal action that moves the rescheduling clock, an earnings beat or miss of 10% or more \u2014 a note the same morning.',
+    body:'Flash Notes go to Pro subscribers the same morning a qualifying event hits. Note \u2116 001 covered Curaleaf\u2019s revised bid for Aurora.<br><br><a href="https://green-terminal.com/samples/flash-001.html" target="_blank" rel="noopener">Read the public extract \u2197</a>' },
+  { cat:'FRIDAY CLOSE', time:'Weekly · Friday after the close', read:'FREE DIGEST + FULL EDITION',
+    title:'The week compressed into positioning-relevant synthesis',
+    sum:'Price action, the 36-name heatmap, the MSOS dashboard, short positioning, Scorecard ranks and the Credit Stress Index reading. The full edition adds options positioning, attribution and index components.',
+    body:'The Friday Close Standard edition covers price action, the 36-name heatmap, MSOS dashboard, short positioning, Scorecard ranks and the Credit Stress Index reading. The full edition (Plus) adds MSOS options positioning \u2014 the call wall, vol regime \u2014 attribution, all five Scorecard pillars and index components. A free digest goes to every Saturday-morning wrap subscriber.' },
+  { cat:'EARNINGS PREVIEW', time:'Each earnings season', read:'ONE PAGE PER OPERATOR',
+    title:'The three numbers that move the pillars',
+    sum:'One page per Scorecard operator before it reports: the three numbers that move its pillars and the options set-up into the print.',
+    body:'Ahead of every Scorecard operator\u2019s print: one page with the three numbers that move its Scorecard pillars, and the options set-up into the report. Included with Plus and Pro.' },
 ];
+
+const INSTRUMENTS = [
+  { name:'MSO Scorecard', cad:'WEEKLY · RANKS EVERY FRIDAY', tag:'16 operators, five pillars.',
+    desc:'Weekly ranking of every major MSO across five pillars \u2014 cash generation, debt coverage, state exposure, execution, and valuation.' },
+  { name:'Cannabis Credit Stress Index', cad:'WEEKLY · HEADLINE EVERY FRIDAY', tag:'Composite refinancing-risk indicator.',
+    desc:'Tracks maturity walls, covenant headroom, spreads, and lender concentration. Scaled 0\u2013100.' },
+  { name:'State Market Share Heatmap', cad:'MONTHLY', tag:'Operator share by state.',
+    desc:'Operator-level share shifts across legal states, normalized from regulatory and dispensary-level data.' },
+  { name:'Catalyst Probability Matrix', cad:'MONTHLY', tag:'The desk\u2019s estimate, on the record.',
+    desc:'Probability-weighted framework for Schedule III, SAFE Banking, 280E reform, and state-level legalizations \u2014 revised on the record, with full history.' },
+  { name:'Positioning', cad:'WEEKLY · EVERY FRIDAY', tag:'Where the crowd is.',
+    desc:'MSOS options open interest by strike (the call wall), implied against realised volatility, and short interest with days to cover for the 36 names.' },
+];
+
 const PRODUCTS = [
-  { name:'Pre-Market Brief', cad:'EVERY TRADING DAY \u00b7 08:30 ET', tag:'Everything that matters, before the open.',
-    desc:'A concise, decision-ready read on US cannabis equities delivered before the market opens: overnight news, positioning, flows, and the names on the move \u2014 with our read on what it actually means.' },
-  { name:'The Friday Close', cad:'WEEKLY \u00b7 FRIDAY AFTER THE CLOSE', tag:'The week, distilled.',
-    desc:'Weekly performance across the coverage universe, positioning and flow analysis, and the charts that mattered \u2014 plus the setup for the week ahead.' },
-  { name:'Monthly Deep Dives', cad:'MONTHLY', tag:'Where the consensus hasn\u2019t looked.',
-    desc:'Long-form thematic research: wholesale pricing, state-level regulatory maps, operator economics, and emerging sub-sectors, built from proprietary data work.' },
-  { name:'Proprietary Instruments', cad:'UPDATED CONTINUOUSLY', tag:'Five tools you won\u2019t find anywhere else.',
-    desc:'Five proprietary data instruments tracking the US cannabis complex \u2014 pricing, sentiment, positioning and policy momentum in one dashboard.',
-    tags:['Pricing Monitor','Policy Tracker','Positioning Heatmap','Sentiment Index','Flow Radar'] },
+  { name:'Pre-Market Brief', cad:'EVERY TRADING DAY · 08:30 ET', tag:'The daily discipline.',
+    desc:'Overnight moves and what drove them, the day\u2019s earnings and event calendar, the options pulse, and the single observation that matters \u2014 in your inbox before the open. Read time under four minutes.' },
+  { name:'The Friday Close', cad:'WEEKLY · FRIDAY AFTER THE CLOSE', tag:'The week, distilled.',
+    desc:'Price action, the 36-name heatmap, the MSOS dashboard, short positioning, Scorecard ranks and the Credit Stress Index reading. Full edition adds options positioning and the five-pillar Scorecard.' },
+  { name:'Flash Notes', cad:'SAME MORNING · QUALIFYING EVENTS', tag:'Event-driven, when it happens.',
+    desc:'M&A or financing by a covered operator, a federal action that changes the rescheduling clock, an earnings beat or miss of 10% or more \u2014 a note the same morning.' },
+  { name:'Earnings Previews', cad:'EACH SEASON', tag:'Into the print.',
+    desc:'One page per Scorecard operator before it reports: the three numbers that move its pillars and the options set-up into the print.' },
+  { name:'Monthly Package', cad:'FIRST TUESDAY, MONTHLY', tag:'One sitting, once a month.',
+    desc:'Deep Dive, State Market Share Heatmap, Catalyst Probability Matrix, Valuation Map, Deals & Financings tracker, and the Event Library.' },
+  { name:'State Monitor', cad:'QUARTERLY', tag:'One state per quarter.',
+    desc:'Framework, sales and price, operator landscape, what management says, and what it means for the Scorecard.' },
 ];
+
+const TIERS = {
+  monthly: [
+    { name:'Standard', tagline:'The daily discipline.',
+      summary:'Pre-Market Brief every trading day, the Friday Close (Standard edition) and the live Catalyst Calendar.',
+      features:['Pre-Market Brief every trading day, 08:30 ET','Friday Close, Standard edition','Live Catalyst Calendar \u2014 dated, sourced, updated weekly'],
+      link:'https://buy.stripe.com/dRmbJ1eWsa6c78dbCMdMI06' },
+    { name:'Plus', tagline:'The full instruments.', featured:true,
+      summary:'Everything in Standard, plus the full Friday Close, the monthly package and earnings previews.',
+      features:['Everything in Standard','Friday Close, full edition \u2014 options positioning, attribution, five-pillar Scorecard','Monthly package, first Tuesday','Earnings previews every season','Back-issue archive'],
+      link:'https://buy.stripe.com/eVqeVd3dK6U0505fT2dMI08' },
+    { name:'Pro', tagline:'The desk.',
+      summary:'Everything in Plus, with same-morning Flash Notes, the quarterly State Teardown, data packs and up to three seats.',
+      features:['Everything in Plus','Flash Notes the same morning on qualifying events','Quarterly State Teardown','Daily and weekly data packs (CSV/JSON)','Data room with running history','Up to three seats'],
+      link:'https://buy.stripe.com/cNi6oH29G6U09glayIdMI03' },
+  ],
+  yearly: [
+    { name:'Standard', tagline:'The daily discipline.',
+      summary:'Pre-Market Brief every trading day, the Friday Close (Standard edition) and the live Catalyst Calendar.',
+      features:['Pre-Market Brief every trading day, 08:30 ET','Friday Close, Standard edition','Live Catalyst Calendar','14-day money-back on annual'],
+      link:'https://buy.stripe.com/14A00jcOk6U00JP36gdMI07' },
+    { name:'Plus', tagline:'The full instruments.', featured:true,
+      summary:'Everything in Standard, plus the full Friday Close, the monthly package and earnings previews.',
+      features:['Everything in Standard','Friday Close, full edition','Monthly package, first Tuesday','Earnings previews every season','Back-issue archive','14-day money-back on annual'],
+      link:'https://buy.stripe.com/fZu5kDdSobageAF6isdMI09' },
+    { name:'Pro', tagline:'The desk.',
+      summary:'Everything in Plus, with Flash Notes, State Teardown, data packs and up to three seats.',
+      features:['Everything in Plus','Flash Notes same-morning','Quarterly State Teardown','Daily + weekly data packs','Data room','Up to three seats','14-day money-back on annual'],
+      link:'https://buy.stripe.com/bJe00j3dKdio9gl4akdMI0a' },
+  ],
+};
+
+const STRIPE_PORTAL = 'https://billing.stripe.com/p/login/7sYdR98y4928akpfT2dMI00';
+const SIGNUP_HOOK = 'https://hook.us2.make.com/s6wa4pxl84mhspjctdjtizy1ba701ehy';
+
 const REPLIES = [
   'Thanks for your message. The research desk will respond here \u2014 this demo reply is placeholder until chat is connected to the Green Terminal backend.',
   'Noted. In production this thread connects to your Green Terminal subscription chat.',
   'Got it \u2014 the desk typically answers within market hours.',
 ];
 
+/* ===== App logic ===== */
+
 const content = document.getElementById('content');
 const title = document.getElementById('title');
 const subtitle = document.getElementById('subtitle');
 const inputbar = document.getElementById('inputbar');
 const nav = document.querySelectorAll('.navitem');
+let billing = 'monthly';
 document.getElementById('clock').textContent =
   new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
 const today = new Date().toLocaleDateString('en-US', {weekday:'long', month:'long', day:'numeric'});
-
 let replyIdx = 0;
 
 function show(tab) {
@@ -187,28 +272,80 @@ function show(tab) {
 
 function renderNews() {
   title.textContent = 'News'; subtitle.textContent = today;
-  content.innerHTML = '<div class="instr">Tap a story to expand \u00b7 placeholder content</div>' +
-    ARTICLES.map((a,i) => `
+  content.innerHTML = '<div class="instr">The desk\u2019s published feed \u00b7 tap to expand</div>' +
+    FEED.map(a => `
       <div class="card" onclick="this.classList.toggle('open')">
         <div class="meta"><span class="tag">${a.cat}</span><span class="time">${a.time}</span></div>
         <h2>${a.title}</h2><p>${a.sum}</p>
-        <div class="body">Full article body renders here once the app is wired to the Green Terminal API.</div>
+        <div class="body">${a.body}<span class="readstat">${a.read}</span></div>
       </div>`).join('');
+}
+
+function tierCard(t) {
+  return `
+    <div class="card tier ${t.featured ? 'featured' : ''}">
+      ${t.featured ? '<div class="badge">RECOMMENDED</div>' : ''}
+      <h2>${t.name}</h2>
+      <div class="time">${t.tagline}</div>
+      <p style="margin-top:6px">${t.summary}</p>
+      <ul>${t.features.map(f => `<li>${f}</li>`).join('')}</ul>
+      <a class="subbtn" href="${t.link}" target="_blank" rel="noopener">Subscribe ${t.price === 'yearly' ? 'annually' : 'monthly'} \u2197</a>
+    </div>`;
 }
 
 function renderResearch() {
   title.textContent = 'Research';
   subtitle.textContent = 'Independent, subscriber-funded US cannabis research.';
-  content.innerHTML =
-    PRODUCTS.map(p => `
+
+  content.innerHTML = `
+    <div class="signup">
+      <h2>The free Friday wrap</h2>
+      <p>Every Saturday morning: the week in US cannabis \u2014 the KPI card and three sourced facts. Free. No daily brief, no tables \u2014 those are for subscribers.</p>
+      <form id="nlform">
+        <input type="email" required placeholder="you@firm.com" id="nlemail" />
+        <button type="submit">Sign up</button>
+      </form>
+    </div>
+
+    <div class="section">PRODUCTS</div>
+    ${PRODUCTS.map(p => `
       <div class="card">
         <div class="tag">${p.name}</div>
         <div class="tag green" style="margin-top:4px">${p.cad}</div>
         <h2>${p.tag}</h2><p style="color:var(--muted);font-size:13px">${p.desc}</p>
-        ${p.tags ? '<div class="instr-tags">' + p.tags.map(t => `<div>\u00b7 ${t}</div>`).join('') + '</div>' : ''}
-      </div>`).join('') +
-    '<a class="cta" href="https://green-terminal.com/pricing" target="_blank" rel="noopener">View plans &amp; pricing</a>';
+      </div>`).join('')}
+
+    <div class="section">FIVE PROPRIETARY INSTRUMENTS</div>
+    ${INSTRUMENTS.map(p => `
+      <div class="card">
+        <div class="tag">${p.name}</div>
+        <div class="tag green" style="margin-top:4px">${p.cad}</div>
+        <h2>${p.tag}</h2><p style="color:var(--muted);font-size:13px">${p.desc}</p>
+      </div>`).join('')}
+    <div class="instr">Headline readings appear in every Friday Close; the full tables go to subscribers.</div>
+
+    <div class="section">SUBSCRIBE</div>
+    <div class="tierswitch">
+      <button class="${billing==='monthly'?'active':''}" onclick="setBilling('monthly')">Monthly</button>
+      <button class="${billing==='yearly'?'active':''}" onclick="setBilling('yearly')">Annual</button>
+    </div>
+    <div id="tiers">${TIERS[billing].map(tierCard).join('')}</div>
+    <div class="portal">Already subscribed? <a href="${STRIPE_PORTAL}" target="_blank" rel="noopener">Manage your account \u2197</a></div>
+    <a style="display:block;text-align:center;text-decoration:none;background:var(--surface2);color:var(--muted);border:1px solid var(--line);border-radius:12px;padding:13px;margin:6px 0 12px;font:600 13px -apple-system,system-ui,sans-serif" href="https://green-terminal.com/samples/flash-001.html" target="_blank" rel="noopener">See a sample \u2014 Flash Note \u2116 001 \u2197</a>`;
+
+  document.getElementById('nlform').addEventListener('submit', e => {
+    e.preventDefault();
+    const email = document.getElementById('nlemail').value.trim();
+    fetch(SIGNUP_HOOK, {
+      method: 'POST', mode: 'no-cors',
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      body: new URLSearchParams({email, source: 'app-preview'}),
+    }).catch(() => {});
+    e.target.outerHTML = '<div class="ok">\u2713 Noted \u2014 the first wrap lands Saturday morning.</div>';
+  });
 }
+
+function setBilling(b) { billing = b; renderResearch(); }
 
 function renderChat() {
   title.textContent = 'Chat';
@@ -218,9 +355,7 @@ function renderChat() {
     </div><div class="instr" style="padding-top:4px">Demo \u2014 replies are placeholders</div>`;
 }
 
-function stamp() {
-  return new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
-}
+function stamp() { return new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}); }
 
 function send() {
   const input = document.getElementById('msg');
