@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Green Terminal — App Preview</title>
+<style>
+  :root {
+    --bg: #0b0e0b; --surface: #131711; --surface2: #1b2019;
+    --gold: #c9a35c; --green: #4e9a5f;
+    --text: #eae5d3; --muted: #8f8b7e; --line: #242a20;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body {
+    background: #050705;
+    display: flex; justify-content: center; min-height: 100vh;
+    font-family: Georgia, 'Times New Roman', serif;
+  }
+  /* Phone frame on desktop, full-screen on mobile */
+  #phone {
+    width: 100%; max-width: 420px; height: 100vh;
+    background: var(--bg); color: var(--text);
+    display: flex; flex-direction: column;
+    position: relative; overflow: hidden;
+  }
+  @media (min-width: 480px) {
+    body { padding: 24px 0; }
+    #phone {
+      height: 860px; max-height: 92vh; border-radius: 36px;
+      border: 10px solid #1a1d1a; box-shadow: 0 30px 80px rgba(0,0,0,.7);
+    }
+  }
+  .statusbar {
+    display: flex; justify-content: space-between; padding: 10px 20px 2px;
+    font: 12px/1 -apple-system, system-ui, sans-serif; color: var(--muted);
+  }
+  /* Masthead */
+  .masthead { padding: 14px 18px 12px; border-bottom: 1px solid var(--line); }
+  .brand { font: 600 11px/1 'Courier New', monospace; letter-spacing: 2.5px; color: var(--gold); }
+  .masthead h1 { font-size: 26px; font-weight: 500; margin-top: 4px; }
+  .masthead .sub { font-size: 13px; color: var(--muted); margin-top: 3px; font-style: italic; }
+  /* Content */
+  #content { flex: 1; overflow-y: auto; padding: 12px 14px 16px; }
+  #content::-webkit-scrollbar { width: 0; }
+  .card {
+    background: var(--surface); border-radius: 14px; padding: 14px;
+    margin-bottom: 10px; cursor: pointer; transition: transform .12s;
+  }
+  .card:active { transform: scale(.985); }
+  .card .meta { display: flex; justify-content: space-between; align-items: baseline; }
+  .tag { font: 600 10.5px/1 'Courier New', monospace; letter-spacing: 1.6px; color: var(--gold); }
+  .tag.green { color: var(--green); }
+  .time { font-size: 12px; color: var(--muted); font-style: italic; }
+  .card h2 { font-size: 16.5px; font-weight: 500; margin: 8px 0 5px; }
+  .card p { font-size: 14px; line-height: 1.45; color: var(--text); opacity: .92; }
+  .card .body { display: none; margin-top: 8px; font-size: 13px; color: var(--muted); }
+  .card.open .body { display: block; }
+  .instr { font-size: 12px; color: var(--muted); text-align: center; padding: 2px 0 10px; font-style: italic; }
+  /* Research */
+  .cta {
+    display: block; text-align: center; text-decoration: none;
+    background: var(--gold); color: var(--bg); font-size: 15px;
+    border-radius: 12px; padding: 13px; margin: 6px 0 12px; font-weight: 600;
+  }
+  .instr-tags { margin-top: 8px; }
+  .instr-tags div { font-size: 13px; color: var(--green); }
+  /* Chat */
+  #chatlog { display: flex; flex-direction: column; gap: 8px; padding-bottom: 8px; }
+  .bubble {
+    max-width: 78%; padding: 10px 13px; border-radius: 16px;
+    font-size: 14.5px; line-height: 1.4;
+  }
+  .bubble .t { display: block; font: 10px 'Courier New', monospace; letter-spacing: 1px; margin-top: 4px; opacity: .65; }
+  .bubble.them { background: var(--surface); border-bottom-left-radius: 5px; align-self: flex-start; }
+  .bubble.them .t { color: var(--gold); }
+  .bubble.me { background: var(--green); color: #08130b; border-bottom-right-radius: 5px; align-self: flex-end; }
+  .typing { color: var(--muted); font-size: 13px; font-style: italic; }
+  /* Input bar */
+  #inputbar {
+    display: none; gap: 8px; padding: 10px 12px 14px;
+    border-top: 1px solid var(--line); background: var(--bg);
+  }
+  #inputbar.show { display: flex; }
+  #msg {
+    flex: 1; background: var(--surface2); border: 1px solid var(--line);
+    border-radius: 22px; padding: 11px 16px; color: var(--text);
+    font: 15px Georgia, serif; outline: none;
+  }
+  #msg:focus { border-color: var(--gold); }
+  #send {
+    width: 44px; height: 44px; border-radius: 50%; border: none;
+    background: var(--gold); color: var(--bg); font-size: 18px; cursor: pointer;
+  }
+  /* Bottom nav */
+  #nav {
+    display: flex; border-top: 1px solid var(--line);
+    background: var(--bg); padding: 6px 0 14px;
+  }
+  .navitem {
+    flex: 1; background: none; border: none; color: var(--muted);
+    font: 12.5px -apple-system, system-ui, sans-serif; cursor: pointer;
+    display: flex; flex-direction: column; align-items: center; gap: 3px;
+  }
+  .navitem svg { width: 22px; height: 22px; fill: currentColor; }
+  .navitem.active { color: var(--gold); }
+</style>
+</head>
+<body>
+<div id="phone">
+  <div class="statusbar"><span>Green Terminal</span><span id="clock"></span></div>
+
+  <div class="masthead">
+    <div class="brand">GREEN TERMINAL</div>
+    <h1 id="title">News</h1>
+    <div class="sub" id="subtitle"></div>
+  </div>
+
+  <div id="content"></div>
+
+  <div id="inputbar">
+    <input id="msg" placeholder="Message the desk…" autocomplete="off" />
+    <button id="send" aria-label="Send">➤</button>
+  </div>
+
+  <div id="nav">
+    <button class="navitem active" data-tab="news">
+      <svg viewBox="0 0 24 24"><path d="M4 4h13a2 2 0 0 1 2 2v12h1a1 1 0 0 1 0 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zm2 4v10h11V8H6zm2 2h7v2H8v-2zm0 4h7v2H8v-2z"/></svg>
+      News</button>
+    <button class="navitem" data-tab="research">
+      <svg viewBox="0 0 24 24"><path d="M5 3h11l4 4v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zm10 1v4h4M8 12h8v2H8v-2zm0 4h8v2H8v-2z"/></svg>
+      Research</button>
+    <button class="navitem" data-tab="chat">
+      <svg viewBox="0 0 24 24"><path d="M4 4h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H9l-5 4V6a2 2 0 0 1 2-2h16zM6 8v2h12V8H6zm0 4v2h8v-2H6z"/></svg>
+      Chat</button>
+  </div>
+</div>
+
+<script>
+const ARTICLES = [
+  { cat:'PRE-MARKET BRIEF', time:'08:30 ET', title:'US cannabis names steady ahead of the open',
+    sum:'Futures flat, MSOS volume building. Today\u2019s brief covers rescheduling headlines, state ballot watch, and the names moving on above-average pre-market volume.' },
+  { cat:'POLICY', time:'07:45 ET', title:'Senate hearing sets next marker for banking reform',
+    sum:'Committee schedules markup session. We outline which operators have the most to gain from SAFE-style access, and what the timeline realistically looks like.' },
+  { cat:'EARNINGS', time:'Yesterday', title:'Multi-state operator guidance roundup: who raised, who held',
+    sum:'Three reported this week. Two raised full-year revenue guidance; one held margins flat. Our scorecard separates guidance quality from headline beats.' },
+  { cat:'FRIDAY CLOSE', time:'Friday \u00b7 17:30 ET', title:'The Friday Close: week 42 wrap',
+    sum:'Weekly performance across our coverage, positioning shifts, and the three charts that mattered \u2014 plus what we\u2019re watching before Monday\u2019s open.' },
+  { cat:'DEEP DIVE', time:'Oct 14', title:'New monthly deep dive: wholesale pricing in mature state markets',
+    sum:'Colorado and Oregon wholesale data shows stabilization after three years of compression. We model what that means for cultivator margins in 2027.' },
+];
+const PRODUCTS = [
+  { name:'Pre-Market Brief', cad:'EVERY TRADING DAY \u00b7 08:30 ET', tag:'Everything that matters, before the open.',
+    desc:'A concise, decision-ready read on US cannabis equities delivered before the market opens: overnight news, positioning, flows, and the names on the move \u2014 with our read on what it actually means.' },
+  { name:'The Friday Close', cad:'WEEKLY \u00b7 FRIDAY AFTER THE CLOSE', tag:'The week, distilled.',
+    desc:'Weekly performance across the coverage universe, positioning and flow analysis, and the charts that mattered \u2014 plus the setup for the week ahead.' },
+  { name:'Monthly Deep Dives', cad:'MONTHLY', tag:'Where the consensus hasn\u2019t looked.',
+    desc:'Long-form thematic research: wholesale pricing, state-level regulatory maps, operator economics, and emerging sub-sectors, built from proprietary data work.' },
+  { name:'Proprietary Instruments', cad:'UPDATED CONTINUOUSLY', tag:'Five tools you won\u2019t find anywhere else.',
+    desc:'Five proprietary data instruments tracking the US cannabis complex \u2014 pricing, sentiment, positioning and policy momentum in one dashboard.',
+    tags:['Pricing Monitor','Policy Tracker','Positioning Heatmap','Sentiment Index','Flow Radar'] },
+];
+const REPLIES = [
+  'Thanks for your message. The research desk will respond here \u2014 this demo reply is placeholder until chat is connected to the Green Terminal backend.',
+  'Noted. In production this thread connects to your Green Terminal subscription chat.',
+  'Got it \u2014 the desk typically answers within market hours.',
+];
+
+const content = document.getElementById('content');
+const title = document.getElementById('title');
+const subtitle = document.getElementById('subtitle');
+const inputbar = document.getElementById('inputbar');
+const nav = document.querySelectorAll('.navitem');
+document.getElementById('clock').textContent =
+  new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+const today = new Date().toLocaleDateString('en-US', {weekday:'long', month:'long', day:'numeric'});
+
+let replyIdx = 0;
+
+function show(tab) {
+  nav.forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+  inputbar.classList.toggle('show', tab === 'chat');
+  if (tab === 'news') renderNews();
+  if (tab === 'research') renderResearch();
+  if (tab === 'chat') renderChat();
+  content.scrollTop = 0;
+}
+
+function renderNews() {
+  title.textContent = 'News'; subtitle.textContent = today;
+  content.innerHTML = '<div class="instr">Tap a story to expand \u00b7 placeholder content</div>' +
+    ARTICLES.map((a,i) => `
+      <div class="card" onclick="this.classList.toggle('open')">
+        <div class="meta"><span class="tag">${a.cat}</span><span class="time">${a.time}</span></div>
+        <h2>${a.title}</h2><p>${a.sum}</p>
+        <div class="body">Full article body renders here once the app is wired to the Green Terminal API.</div>
+      </div>`).join('');
+}
+
+function renderResearch() {
+  title.textContent = 'Research';
+  subtitle.textContent = 'Independent, subscriber-funded US cannabis research.';
+  content.innerHTML =
+    PRODUCTS.map(p => `
+      <div class="card">
+        <div class="tag">${p.name}</div>
+        <div class="tag green" style="margin-top:4px">${p.cad}</div>
+        <h2>${p.tag}</h2><p style="color:var(--muted);font-size:13px">${p.desc}</p>
+        ${p.tags ? '<div class="instr-tags">' + p.tags.map(t => `<div>\u00b7 ${t}</div>`).join('') + '</div>' : ''}
+      </div>`).join('') +
+    '<a class="cta" href="https://green-terminal.com/pricing" target="_blank" rel="noopener">View plans &amp; pricing</a>';
+}
+
+function renderChat() {
+  title.textContent = 'Chat';
+  subtitle.textContent = 'Direct line to the research desk.';
+  content.innerHTML = `<div id="chatlog">
+      <div class="bubble them">Welcome to Green Terminal. Ask the desk anything about US cannabis markets.<span class="t">${stamp()}</span></div>
+    </div><div class="instr" style="padding-top:4px">Demo \u2014 replies are placeholders</div>`;
+}
+
+function stamp() {
+  return new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+}
+
+function send() {
+  const input = document.getElementById('msg');
+  const text = input.value.trim();
+  if (!text) return;
+  const log = document.getElementById('chatlog');
+  log.insertAdjacentHTML('beforeend',
+    `<div class="bubble me">${escapeHtml(text)}<span class="t">${stamp()}</span></div>
+     <div class="bubble them typing" id="typing">desk is typing\u2026</div>`);
+  input.value = '';
+  content.scrollTop = content.scrollHeight;
+  setTimeout(() => {
+    const t = document.getElementById('typing');
+    if (t) t.outerHTML = `<div class="bubble them">${REPLIES[replyIdx++ % REPLIES.length]}<span class="t">${stamp()}</span></div>`;
+    content.scrollTop = content.scrollHeight;
+  }, 900);
+}
+
+function escapeHtml(s) {
+  return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+nav.forEach(b => b.addEventListener('click', () => show(b.dataset.tab)));
+document.getElementById('send').addEventListener('click', send);
+document.getElementById('msg').addEventListener('keydown', e => { if (e.key === 'Enter') send(); });
+show('news');
+</script>
+</body>
+</html>
